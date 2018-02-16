@@ -31,8 +31,16 @@ public class Main {
   public static void runPeer(int port){
     Scanner in = new Scanner(System.in);
     Peer peer = new Peer(port);
-    ServerStub stub = new ServerStub();
-    peer.setServerStub(stub);
+    ServerStub serverStub = new ServerStub();
+    peer.setServerStub(serverStub);
+    PeerSkeleton peerSkeleton = new PeerSkeleton(peer);
+
+    new Thread(){
+      public void run(){
+        peerSkeleton.listen();
+      }
+    }.run();
+
     while(true){
       try {
         System.out.println("Running the peer boys");
@@ -41,8 +49,8 @@ public class Main {
           break;
         }
         String filename = in.next();
-        if(command.equals("search")){
-          peer.obtain(filename);
+        if(command.equals("get")){
+          peer.get(filename);
         } else if (command.equals("register")){
           peer.register(filename);
         }

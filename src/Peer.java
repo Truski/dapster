@@ -10,7 +10,13 @@ public class Peer implements Serializable {
     this.port = port;
   }
 
-  public void obtain(String filename){
+  public byte[] obtain(String filename){
+    File file = new File(filename);
+    byte[] bytes = Files.readAllBytes(file.toPath());
+    return bytes;
+  }
+
+  public void get(String filename){
     // Connect to indexing server to find peers that have this file
     ArrayList<Peer> peers = server.search(filename);
     if(peers == null){
@@ -21,7 +27,24 @@ public class Peer implements Serializable {
     for(Peer p : peers){
       System.out.println(p.getAddress());
     }
-    // With the peer's address, open a connection of them
+
+    if(peers.size() == 0){
+      return;
+    }
+
+    PeerStub peer = new PeerStub(p.get(0));
+
+    byte[] file = peer.obtain(filename);
+
+    System.out.println("Successfull read file " + filename + " from Peer " + p.get(0).getAddress + ". File has " + file.length + " byte.";
+  }
+
+  public String getHostName(){
+    return address;
+  }
+
+  public int getPort(){
+    return port;
   }
 
   public String getAddress(){
