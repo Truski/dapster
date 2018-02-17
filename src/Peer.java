@@ -30,6 +30,13 @@ public class Peer implements Serializable {
     if(peers == null){
       System.out.println("Obtained 0 peers for file " + filename);
       return;
+    } else {
+      for(Peer p : peers){
+        if(p.getAddress().equals(this.getAddress())){
+          peers.remove(p);
+          break;
+        }
+      }
     }
     System.out.println("Obtained " + peers.size() + " peers for file " + filename);
     for(Peer p : peers){
@@ -43,7 +50,22 @@ public class Peer implements Serializable {
     PeerStub peer = new PeerStub(peers.get(0));
 
     if(peer.obtain(filename)){
-      System.out.println("Successfully downloaded " + filename);
+      System.out.println("Successfully downloaded " + filename + "from " + peers.get(0).getAddress());
+      try {
+        long length = new File(filename).length();
+        if(length > 1024){
+          System.out.println("File is large - will not display.");
+        } else {
+          FileInputStream fileInputStream = new FileInputStream(filename);
+          byte[] buffer = new byte[1024];
+          fileInputStream.read(buffer, 0, 1024);
+          System.out.println("<==|== Start of File Contents ==||==>");
+          System.out.println(new String(buffer));
+          System.out.println("<==|==  End of File Contents  ==||==>");
+        }
+      } catch (Exception e){
+        e.printStackTrace();
+      }
     }
 
     // System.out.println("Successfully read file " + filename + " from Peer " + peers.get(0).getAddress() + ". File has " + file.length + " byte.");
