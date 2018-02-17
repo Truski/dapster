@@ -51,7 +51,7 @@ public class ServerSkeleton {
     if(peers == null){
       System.out.println("Searching for file " + filename + " | Found 0 peers");
     } else {
-      System.out.println("Searching for file " + filename + " | Found " + peers.size() + " + peers");
+      System.out.println("Searching for file " + filename + " | Found " + peers.size() + " peers");
     }
   }
 }
