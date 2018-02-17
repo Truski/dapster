@@ -35,11 +35,7 @@ public class Main {
     peer.setServerStub(serverStub);
     PeerSkeleton peerSkeleton = new PeerSkeleton(peer);
 
-    new Thread(){
-      public void run(){
-        peerSkeleton.listen();
-      }
-    }.run();
+    new Thread(() -> peerSkeleton.listen()).start();
 
     while(true){
       try {

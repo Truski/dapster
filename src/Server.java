@@ -10,7 +10,7 @@ public class Server {
     registry = new HashMap<String, ArrayList<Peer>>();
   }
 
-  public void register(Peer peer, String filename){
+  public synchronized void register(Peer peer, String filename){
     if(registry.containsKey(filename)){
       registry.get(filename).add(peer);
     } else {

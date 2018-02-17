@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.io.Serializable;
@@ -12,10 +14,14 @@ public class Peer implements Serializable {
     this.port = port;
   }
 
-  public byte[] obtain(String filename) throws Exception {
-    File file = new File(filename);
-    byte[] bytes = Files.readAllBytes(file.toPath());
-    return bytes;
+  public FileInputStream obtain(String filename) {
+    FileInputStream is = null;
+    try {
+      is = new FileInputStream(filename);
+    } catch (Exception e){
+      e.printStackTrace();
+    }
+    return is;
   }
 
   public void get(String filename){
@@ -36,9 +42,11 @@ public class Peer implements Serializable {
 
     PeerStub peer = new PeerStub(peers.get(0));
 
-    byte[] file = peer.obtain(filename);
+    if(peer.obtain(filename)){
+      System.out.println("Successfully downloaded " + filename);
+    }
 
-    System.out.println("Successfully read file " + filename + " from Peer " + peers.get(0).getAddress() + ". File has " + file.length + " byte.");
+    // System.out.println("Successfully read file " + filename + " from Peer " + peers.get(0).getAddress() + ". File has " + file.length + " byte.");
   }
 
   public String getHostName(){
