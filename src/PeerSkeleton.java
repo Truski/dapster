@@ -1,4 +1,7 @@
-
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 public class PeerSkeleton {
 	private Peer peer;
@@ -22,11 +25,15 @@ public class PeerSkeleton {
   }
 
   public void obtain(Socket s){
-    ObjectInputStream is = new ObjectInputStream(s.getInputStream());
-    String filename = (String) is.readObject();
-    byte[] file = peer.obtain(filename);
-    ByteArrayOutputStream os = new ByteArrayOutputStream(s.getOutputStream());
-    os.write(file);
-    s.close();
+	  try {
+      ObjectInputStream is = new ObjectInputStream(s.getInputStream());
+      String filename = (String) is.readObject();
+      byte[] file = peer.obtain(filename);
+      ByteArrayOutputStream os = new ByteArrayOutputStream(s.getOutputStream());
+      os.write(file);
+      s.close();
+    } catch (Exception e){
+	    e.printStackTrace();
+    }
   }
 }

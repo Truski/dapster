@@ -1,3 +1,5 @@
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.io.Serializable;
 
@@ -10,7 +12,7 @@ public class Peer implements Serializable {
     this.port = port;
   }
 
-  public byte[] obtain(String filename){
+  public byte[] obtain(String filename) throws Exception {
     File file = new File(filename);
     byte[] bytes = Files.readAllBytes(file.toPath());
     return bytes;
@@ -32,11 +34,11 @@ public class Peer implements Serializable {
       return;
     }
 
-    PeerStub peer = new PeerStub(p.get(0));
+    PeerStub peer = new PeerStub(peers.get(0));
 
     byte[] file = peer.obtain(filename);
 
-    System.out.println("Successfull read file " + filename + " from Peer " + p.get(0).getAddress + ". File has " + file.length + " byte.";
+    System.out.println("Successfully read file " + filename + " from Peer " + peers.get(0).getAddress() + ". File has " + file.length + " byte.");
   }
 
   public String getHostName(){
