@@ -42,7 +42,7 @@ public class Main {
         System.out.println("Running the peer boys");
         String command = in.next();
         if(command.equals("exit")){
-          break;
+          System.exit(0);
         }
         String filename = in.next();
         if(command.equals("get")){
