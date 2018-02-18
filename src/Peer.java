@@ -60,7 +60,7 @@ public class Peer implements Serializable {
 
     // Prune an instance of this peer (disallow downloading from self)
     for(Peer p : peers){
-      if(p.getAddress().equals(this.getAddress())){
+      if(p.getFullAddress().equals(this.getFullAddress())){
         peers.remove(p);
         break;
       }
@@ -77,7 +77,7 @@ public class Peer implements Serializable {
     // Download file from Peer
     if(peer.obtain(filename)){
       // Print Success message
-      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getAddress());
+      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getFullAddress());
 
       // Print file contents if small file
       try {
@@ -106,7 +106,7 @@ public class Peer implements Serializable {
    * Gets the host name (without port) of the server part of the Peer
    * @return Host name of the Peer
    */
-  public String getHostName(){
+  public String getAddress(){
     return address;
   }
 
@@ -123,13 +123,13 @@ public class Peer implements Serializable {
    * Gets the full name of the server part of the Peer (PeerID)
    * @return Full address of the peer
    */
-  public String getAddress(){
+  public String getFullAddress(){
     return address + ":" + port;
   }
 
   /**
    * Sets the interface for the Peer to communicate with the Indexing server.
-   * @param s
+   * @param s The server stub that the peer will interface with
    */
   public void setServerStub(ServerStub s){
     this.server = s;

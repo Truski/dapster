@@ -18,7 +18,7 @@ public class PeerStub{
    * @param p The peer to connect to
    */
   public PeerStub(Peer p){
-    this.address = p.getHostName();
+    this.address = p.getAddress();
     this.port = p.getPort();
   }
 
