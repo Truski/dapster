@@ -25,7 +25,7 @@ public class PeerStub{
   /**
    * Downloads the the given File from the Peer to the shared directory.
    *
-   * @param filename File to download
+   * @param filename Name of the file to download
    * @return True if the download was successful, False otherwise.
    */
   public boolean obtain(String filename) {
@@ -47,14 +47,14 @@ public class PeerStub{
         fos.write(buffer, 0, count); // Write to file from buffer
       }
 
-      // Close resources
+      // Release resources
       socket.close();
       fos.close();
 
-      return true; // Successfully downloaded file.
+      return true; // Successfully downloaded file
     } catch (Exception e){
-      e.printStackTrace();
+      e.printStackTrace(); // An error occurred
     }
-    return false; // Failed to download. Something went wrong.
+    return false; // Failed to download. Something went wrong
   }
 }
