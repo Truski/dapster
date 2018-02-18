@@ -8,6 +8,7 @@ import java.net.Socket;
  * This class acts as a network interface for the server part of a peer. It listens for incoming requests from other
  * peers, and starts new threads to send files.
  */
+
 public class PeerSkeleton {
 	private Peer peer;
 
