@@ -7,6 +7,7 @@ import java.util.ArrayList;
 /**
  * This class acts as a network interface for the server part of the peer. It listens for incoming peer requests.
  */
+
 public class ServerSkeleton {
   private Server server;
 

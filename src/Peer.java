@@ -1,56 +1,85 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.io.Serializable;
 
-public class Peer implements Serializable {
-  private String address = "localhost";
-  private int port;
-  private transient ServerStub server;
+/**
+ * The Peer object represents a peer. In a peer program, it makes requests to the Indexing Server and other peers
+ * to download files. It can be sent over the network as a PeerID. A peer also services requests from other peers via
+ * its skeleton.
+ */
 
+public class Peer implements Serializable {
+  private String address;
+  private int port;
+  private transient ServerStub server; // Reference to server. Not part of a PeerID so transient
+
+  /**
+   * Creates a peer that listens to other peer requests on the given port.
+   *
+   * @param port Endpoint of the server-aspect of this Peer
+   */
   public Peer(int port){
+    this.address = "localhost";
     this.port = port;
   }
 
+  /**
+   * Obtains a FileStream for the requested file.
+   *
+   * @param filename Name of the file to obtain
+   * @return Returns the stream to the file, null if no file found
+   */
   public FileInputStream obtain(String filename) {
     FileInputStream is = null;
+
     try {
-      is = new FileInputStream(filename);
+      is = new FileInputStream(filename); // Open file and grab stream
     } catch (Exception e){
-      e.printStackTrace();
+      e.printStackTrace(); // An error occurred
     }
+
     return is;
   }
 
-  public void get(String filename){
-    // Connect to indexing server to find peers that have this file
+  /**
+   * Downloads the file with the given name from a peer. First checks the indexing server for peers that have the file,
+   * then downloads it if there is a peer with the file.
+   *
+   * @param filename Name of the file to download
+   * @return Returns true if successful, false is no peer with file exists or error downloading.
+   */
+  public boolean get(String filename){
+    // Get list of peers from the server
     ArrayList<Peer> peers = server.search(filename);
+
+    // If no peers or error, return false
     if(peers == null){
-      System.out.println("Obtained 0 peers for file " + filename);
-      return;
-    } else {
-      for(Peer p : peers){
-        if(p.getAddress().equals(this.getAddress())){
-          peers.remove(p);
-          break;
-        }
+      return false;
+    }
+
+    // Prune an instance of this peer (disallow downloading from self)
+    for(Peer p : peers){
+      if(p.getAddress().equals(this.getAddress())){
+        peers.remove(p);
+        break;
       }
     }
-    System.out.println("Obtained " + peers.size() + " peers for file " + filename);
-    for(Peer p : peers){
-      System.out.println(p.getAddress());
-    }
 
+    // If no peers, return false
     if(peers.size() == 0){
-      return;
+      return false;
     }
 
+    // Create stub to Peer to download file from
     PeerStub peer = new PeerStub(peers.get(0));
 
+    // Download file from Peer
     if(peer.obtain(filename)){
-      System.out.println("Successfully downloaded " + filename + "from " + peers.get(0).getAddress());
+      // Print Success message
+      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getAddress());
+
+      // Print file contents if small file
       try {
         long length = new File(filename).length();
         if(length > 1024){
@@ -66,27 +95,50 @@ public class Peer implements Serializable {
       } catch (Exception e){
         e.printStackTrace();
       }
+
+      return true; // Successfully downloaded file
     }
 
-    // System.out.println("Successfully read file " + filename + " from Peer " + peers.get(0).getAddress() + ". File has " + file.length + " byte.");
+    return false; // Error downloading file
   }
 
+  /**
+   * Gets the host name (without port) of the server part of the Peer
+   * @return Host name of the Peer
+   */
   public String getHostName(){
     return address;
   }
 
+
+  /**
+   * Gets the port of the server part of the Peer
+   * @return Endpoint of the Peer
+   */
   public int getPort(){
     return port;
   }
 
+  /**
+   * Gets the full name of the server part of the Peer (PeerID)
+   * @return Full address of the peer
+   */
   public String getAddress(){
     return address + ":" + port;
   }
 
+  /**
+   * Sets the interface for the Peer to communicate with the Indexing server.
+   * @param s
+   */
   public void setServerStub(ServerStub s){
     this.server = s;
   }
 
+  /**
+   * Registers with the Indexing Server the PeerID and the name of a file it is willing to share.
+   * @param filename The name of the file to register with
+   */
   public void register(String filename){
     server.register(this, filename);
   }
