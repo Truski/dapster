@@ -25,6 +25,9 @@ public class Server {
    * @param filename Name of the file that that Peer has
    */
   public synchronized void register(Peer peerid, String filename){
+    // Log registration
+    System.out.println("Registering " + peerid.getFullAddress() + " with " + filename);
+
     // Check if the filename is in the HashMap
     if(registry.containsKey(filename)){
       // If the filename is in the index, just add the new Peer to the list
@@ -45,6 +48,9 @@ public class Server {
    * @return Returns a list of peers that have that file. Returns null if no peer has the file.
    */
   public synchronized ArrayList<Peer> search(String filename) {
+    // Log search
+    System.out.println("Searching for " + filename + ": found " + (registry.get(filename) == null ? "0" : registry.get(filename).size()) + " peers.");
+
     return registry.get(filename);
   }
 }
