@@ -78,23 +78,45 @@ public class Main {
       System.out.print("dapster-peer >>> ");
       String[] command = in.nextLine().split(" ");
       String function = command[0];
-      if(command.length == 1){
-        if(function.equals("exit")){
-          System.exit(0);
-        }
-      } else if (command.length == 2){
-        String filename = command[1];
-        if(function.equals("get")){
+      if(function.equals("exit")){
+        System.exit(0);
+      } else if(function.equals("get")){
+
+        if (command.length == 2){
+          String filename = command[1];
           boolean success = peer.get(filename);
           if(!success){
             System.out.println("Failed to download file: " + filename);
           }
           continue;
-        } else if (function.equals("register")){
+        }
+
+      } else if(function.equals("register")){
+
+        if(command.length == 2){
+
+          String filename = command[1];
           peer.register(filename);
           continue;
+
         }
+
+      } else if(function.equals("test")){
+        if(command.length == 2){
+          int times = Integer.parseInt(command[1]);
+          long total = 0;
+          for(int i = 0; i < times; i++){
+            long startTime = System.nanoTime();
+            serverStub.search(i + ".txt");
+            long endTime = System.nanoTime();
+            total += endTime - startTime;
+          }
+          System.out.println("Total: " + total /1000000f + "ms ; Average: " + total / 1000000f / times + "ms .");
+          continue;
+        }
+
       }
+
       System.out.println("Invalid command!");
     }
   }
