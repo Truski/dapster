@@ -10,14 +10,14 @@ import java.net.Socket;
  */
 
 public class PeerSkeleton {
-	private Peer peer;
+  private Peer peer;
 
   /**
    * Creates a Peer Skeleton that will listen to incoming connections for the given Peer.
    *
    * @param p The Peer that the skeleton is to provide interface for
    */
-	public PeerSkeleton(Peer p){
+  public PeerSkeleton(Peer p){
     this.peer = p;
   }
 
@@ -66,7 +66,7 @@ public class PeerSkeleton {
       fis.close();
 
     } catch (Exception e){
-	    e.printStackTrace(); // An error occurred
+      e.printStackTrace(); // An error occurred
     }
   }
 }
