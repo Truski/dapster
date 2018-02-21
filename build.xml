@@ -1,10 +1,11 @@
-<project>
+<project default="main">
+
   <target name="compile">
     <mkdir dir="build/class"/>
     <javac includeantruntime="false" srcdir="src" destdir="build/class"/>
   </target>
 
-  <target name="jar">
+  <target name="jar" depends="compile">
     <jar destfile="server/Server.jar" basedir="build/class">
       <manifest>
         <attribute name="Main-Class" value="Server"/>
@@ -26,4 +27,7 @@
       </manifest>
     </jar>
   </target>
+
+  <target name="main" depends="jar"/>
+
 </project>
