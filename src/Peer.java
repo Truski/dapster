@@ -75,6 +75,7 @@ public class Peer implements Serializable {
     }
   }
 
+  public static final String SHARED_DIR= "shared/";
   private String address;
   private int port;
   private transient ServerStub server; // Reference to server. Not part of a PeerID so transient
@@ -99,7 +100,7 @@ public class Peer implements Serializable {
     FileInputStream is = null;
 
     try {
-      is = new FileInputStream(filename); // Open file and grab stream
+      is = new FileInputStream(SHARED_DIR + filename); // Open file and grab stream
     } catch (Exception e){
       e.printStackTrace(); // An error occurred
     }
@@ -150,7 +151,7 @@ public class Peer implements Serializable {
         if(length > 1024){
           System.out.println("File is large - will not display.");
         } else {
-          FileInputStream fileInputStream = new FileInputStream(filename);
+          FileInputStream fileInputStream = new FileInputStream(SHARED_DIR + filename);
           byte[] buffer = new byte[1024];
           fileInputStream.read(buffer, 0, 1024);
           System.out.println("<==|== Start of File Contents ==||==>");

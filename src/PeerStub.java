@@ -39,7 +39,7 @@ public class PeerStub{
 
       // Download File
       InputStream is = socket.getInputStream(); // File download stream
-      FileOutputStream fos = new FileOutputStream(filename); // File saving stream
+      FileOutputStream fos = new FileOutputStream(Peer.SHARED_DIR + filename); // File saving stream
 
       int count; // Number of bytes read
       byte[] buffer = new byte[4096]; // Buffer to store file in
