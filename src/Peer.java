@@ -27,6 +27,17 @@ public class Peer implements Serializable {
 
     new Thread(() -> peerSkeleton.listen()).start();
 
+    if(args.length == 2){
+      if(args[1].equals("auto")){
+        System.out.println("Auto-registering files in shared directory.");
+        File shared = new File("./shared/");
+        for(String filename : shared.list()){
+          System.out.println("Registering file " + filename);
+          peer.register(filename);
+        }
+      }
+    }
+
     while(true){
       System.out.println("Please enter a command: get {filename} | register {filename} | exit");
       System.out.print("dapster-peer >>> ");
