@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,70 @@ import java.io.Serializable;
  */
 
 public class Peer implements Serializable {
+
+  public static void main(String[] args){
+    if(args.length == 0){
+      System.out.println("Please provide a port for the Peer to run on.");
+      return;
+    }
+
+    int port = Integer.parseInt(args[0]);
+    Scanner in = new Scanner(System.in);
+    Peer peer = new Peer(port);
+    ServerStub serverStub = new ServerStub();
+    peer.setServerStub(serverStub);
+    PeerSkeleton peerSkeleton = new PeerSkeleton(peer);
+
+    new Thread(() -> peerSkeleton.listen()).start();
+
+    while(true){
+      System.out.println("Please enter a command: get {filename} | register {filename} | exit");
+      System.out.print("dapster-peer >>> ");
+      String[] command = in.nextLine().split(" ");
+      String function = command[0];
+      if(function.equals("exit")){
+        System.exit(0);
+      } else if(function.equals("get")){
+
+        if (command.length == 2){
+          String filename = command[1];
+          boolean success = peer.get(filename);
+          if(!success){
+            System.out.println("Failed to download file: " + filename);
+          }
+          continue;
+        }
+
+      } else if(function.equals("register")){
+
+        if(command.length == 2){
+
+          String filename = command[1];
+          peer.register(filename);
+          continue;
+
+        }
+
+      } else if(function.equals("test")){
+        if(command.length == 2){
+          int times = Integer.parseInt(command[1]);
+          long total = 0;
+          for(int i = 0; i < times; i++){
+            long startTime = System.nanoTime();
+            serverStub.search(i + ".txt");
+            long endTime = System.nanoTime();
+            total += endTime - startTime;
+          }
+          System.out.println("Total: " + total /1000000f + "ms ; Average: " + total / 1000000f / times + "ms .");
+          continue;
+        }
+
+      }
+
+      System.out.println("Invalid command!");
+    }
+  }
+
   private String address;
   private int port;
   private transient ServerStub server; // Reference to server. Not part of a PeerID so transient
