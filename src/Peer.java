@@ -160,9 +160,10 @@ public class Peer implements Serializable {
 
       // Print file contents if small file
       try {
-        long length = new File(filename).length();
+        long length = new File(SHARED_DIR + filename).length();
+        System.out.println("File size: " + length + " bytes.");
         if(length > 1024){
-          System.out.println("File is large - will not display.");
+          System.out.println("File is larger than 1K - will not display.");
         } else {
           FileInputStream fileInputStream = new FileInputStream(SHARED_DIR + filename);
           byte[] buffer = new byte[1024];
