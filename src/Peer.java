@@ -152,11 +152,15 @@ public class Peer implements Serializable {
       System.out.println("|==> " + p.getFullAddress());
     }
 
+    // Select random peer to download from
+    int random = (int) (Math.random() * peers.size());
+    Peer selectedPeer = peers.get(random);
+
     // Announce selected peer to download from
-    System.out.println("Downloading from " + peers.get(0).getFullAddress() + ".");
+    System.out.println("Downloading from " + selectedPeer.getFullAddress() + ".");
 
     // Create stub to Peer to download file from
-    PeerStub peer = new PeerStub(peers.get(0));
+    PeerStub peer = new PeerStub(selectedPeer);
 
     // Download file from Peer
     if(peer.obtain(filename)){
