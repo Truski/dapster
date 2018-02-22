@@ -13,6 +13,7 @@ public class Server {
   /**
    * The entry point for Server processes. A shell prompt is provided to inspect the registry as well as exit
    * gracefully, saving the log file.
+   *
    * @param args Command line arguments (not used)
    */
   public static void main(String[] args){
@@ -24,6 +25,16 @@ public class Server {
     // Start the Server thread that listens for incoming connections
     new Thread(() -> skeleton.listen()).start();
 
+    // Run the command line interface
+    runCLI(server);
+  }
+
+  /**
+   * Function to run the command line interface. Allows server admins to inspect the registry.
+   *
+   * @param server The server to run the command line for
+   */
+  private static void runCLI(Server server) {
     // Create scanner for user input on the CLI and run shell loop
     Scanner in = new Scanner(System.in);
     while(true){
@@ -72,6 +83,7 @@ public class Server {
     }
   }
 
+  // Start of the Server class object
   public static final int PORT = 1888;
   private HashMap<String, ArrayList<Peer>> registry;
 
@@ -106,6 +118,7 @@ public class Server {
 
   /**
    * Returns a list of Peers that have the the file with the given name.
+   *
    * @param filename Name of the file to search for
    * @return Returns a list of peers that have that file. Returns null if no peer has the file.
    */
@@ -116,6 +129,7 @@ public class Server {
 
   /**
    * Get a reference to the Registry/Index for server admin inspection
+   *
    * @return This server's registry
    */
   public HashMap<String, ArrayList<Peer>> getRegistry() {

@@ -47,12 +47,22 @@ public class Peer implements Serializable {
       }
     }
 
+    // Run the command line interface
+    runCLI(peer);
+  }
+
+  /**
+   * Function to run the command line interface.
+   *
+   * @param peer The peer to run the command line for
+   */
+  private static void runCLI(Peer peer) {
     // Create scanner for user input on the CLI and run shell loop
     Scanner in = new Scanner(System.in);
     while(true){
       // Print out available commands and prompt
       System.out.println("Please enter a command: get {filename} | register {filename} | exit");
-      System.out.print("dapster-peer:" + port + " >>> ");
+      System.out.print("dapster-peer:" + peer.getPort() + " >>> ");
 
       // Read user input
       String[] command = in.nextLine().split(" ");
@@ -85,7 +95,7 @@ public class Peer implements Serializable {
           long total = 0;
           for(int i = 0; i < times; i++){
             long startTime = System.nanoTime();
-            serverStub.search(i + ".txt");
+            peer.getServerStub().search(i + ".txt");
             long endTime = System.nanoTime();
             total += endTime - startTime;
           }
@@ -239,6 +249,15 @@ public class Peer implements Serializable {
    */
   public void setServerStub(ServerStub s){
     this.server = s;
+  }
+
+  /**
+   * Gets the interface for interacting with the Indexing server.
+   *
+   * @return The server stub that you want to directly interface with
+   */
+  public ServerStub getServerStub() {
+    return server;
   }
 
   /**

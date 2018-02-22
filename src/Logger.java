@@ -47,6 +47,7 @@ public class Logger {
 
   /**
    * Writes to the log file the provided message. The message is prepended with the current datetime.
+   *
    * @param message Message to be logged.
    */
   public static void Log(String message){
