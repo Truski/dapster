@@ -142,9 +142,18 @@ public class Peer implements Serializable {
 
     // If no peers, inform user
     if(peers.size() == 0){
-      System.out.println("No peers with given file name \"" + filename + "\"");
+      System.out.println("No peers with given file name \"" + filename + "\".");
       return;
     }
+
+    // Announce list of peers with the given file
+    System.out.println("| Found " + peers.size() + " peers for file " + filename + ".");
+    for(Peer p : peers){
+      System.out.println("|==> " + p.getFullAddress());
+    }
+
+    // Announce selected peer to download from
+    System.out.println("Downloading from " + peers.get(0).getFullAddress() + ".");
 
     // Create stub to Peer to download file from
     PeerStub peer = new PeerStub(peers.get(0));
