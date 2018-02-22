@@ -18,6 +18,8 @@ public class ServerSkeleton {
    */
   public ServerSkeleton(Server s){
     this.server = s;
+
+    // Initializes the server's logging functionality
     Logger.StartLogging();
   }
 

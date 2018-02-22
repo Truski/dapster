@@ -19,6 +19,8 @@ public class PeerSkeleton {
    */
   public PeerSkeleton(Peer p){
     this.peer = p;
+
+    // Initializes the server-aspect logging functionality.
     Logger.StartLogging();
   }
 

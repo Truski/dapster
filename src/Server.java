@@ -10,22 +10,39 @@ import java.util.Scanner;
 
 public class Server {
 
+  /**
+   * The entry point for Server processes. A shell prompt is provided to inspect the registry as well as exit
+   * gracefully, saving the log file.
+   * @param args Command line arguments (not used)
+   */
   public static void main(String[] args){
-    Scanner in = new Scanner(System.in);
-    Server server = new Server();
-    ServerSkeleton skeleton = new ServerSkeleton(server);
+
+    // Setup the Server
+    Server server = new Server(); // Base server object with data structures
+    ServerSkeleton skeleton = new ServerSkeleton(server); // Skeleton to listen to incoming connections
+
+    // Start the Server thread that listens for incoming connections
     new Thread(() -> skeleton.listen()).start();
+
+    // Create scanner for user input on the CLI and run shell loop
+    Scanner in = new Scanner(System.in);
     while(true){
+      // Print out available commands and prompt
       System.out.println("Please enter a command: list | list {filename} | exit");
       System.out.print("dapster-server >>> ");
+
+      // Read user input
       String[] command = in.nextLine().split(" ");
+
+      // Check command name
       if(command[0].equals("exit")){
         Logger.EndLogging();
         System.exit(0);
       } else if(command[0].equals("list")){
         if(command.length == 1){
+          // Print entire registry to the console for debugging / inspection
           System.out.println("Indexing Server Contents: ");
-          HashMap<String, ArrayList<Peer>> registry = server.registry;
+          HashMap<String, ArrayList<Peer>> registry = server.getRegistry();
           System.out.println(" +-- " + registry.size() + " files --+ ");
           for(String filename : registry.keySet()){
             System.out.println(String.format(Locale.US, "%20s | %d peers", filename, registry.get(filename).size()));
@@ -35,8 +52,9 @@ public class Server {
           }
           continue;
         } else {
+          // Print the list of peers for a specific file
           String filename = command[1];
-          ArrayList<Peer> peers = server.registry.get(filename);
+          ArrayList<Peer> peers = server.getRegistry().get(filename);
           if(peers == null){
             System.out.println(String.format(Locale.US, "%20s | %d peers", filename, 0));
             continue;
@@ -49,12 +67,13 @@ public class Server {
         }
       }
 
+      // Announce invalid command if none of the available options were selected
       System.out.println("Invalid command!");
     }
   }
 
   public static final int PORT = 1888;
-  public HashMap<String, ArrayList<Peer>> registry;
+  private HashMap<String, ArrayList<Peer>> registry;
 
   /**
    * Creates a Server object with an empty registry.
@@ -93,5 +112,13 @@ public class Server {
   public synchronized ArrayList<Peer> search(String filename) {
 
     return registry.get(filename);
+  }
+
+  /**
+   * Get a reference to the Registry/Index for server admin inspection
+   * @return This server's registry
+   */
+  public HashMap<String, ArrayList<Peer>> getRegistry() {
+    return registry;
   }
 }

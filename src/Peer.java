@@ -12,36 +12,53 @@ import java.io.Serializable;
 
 public class Peer implements Serializable {
 
+  /**
+   * The entry point for Peer processes. Users must provide a unique port number as the first command-line argument.
+   * Optionally, the user may supply -a or auto to automatically register all of the files in their shared/ directory.
+   * @param args args[0] is the port number, args[1] is an optional -a or auto flag to auto-register shared files on
+   *             startup
+   */
   public static void main(String[] args){
+
+    // Disallow not providing a port
     if(args.length == 0){
       System.out.println("Please provide a port for the Peer to run on.");
       return;
     }
-
     int port = Integer.parseInt(args[0]);
-    Scanner in = new Scanner(System.in);
-    Peer peer = new Peer(port);
-    ServerStub serverStub = new ServerStub();
-    peer.setServerStub(serverStub);
-    PeerSkeleton peerSkeleton = new PeerSkeleton(peer);
 
+    // Setup the Peer
+    Peer peer = new Peer(port); // Base Peer object
+    ServerStub serverStub = new ServerStub(); // Stub for the peer to communicate with the server
+    peer.setServerStub(serverStub); // Set the peer's ServerStub to the one just created
+    PeerSkeleton peerSkeleton = new PeerSkeleton(peer); // Skeleton for the peer to listen to fellow Peers' requests
+
+    // Start the server-aspect of the Peer (skeleton) to listen for connections on a new thread
     new Thread(() -> peerSkeleton.listen()).start();
 
+    // Check if auto / -a flag was provided. If so, register all files in shared directory.
     if(args.length == 2){
       if(args[1].equals("auto") || args[1].equals("-a")){
-        System.out.println("Auto-registering files in shared directory.");
-        File shared = new File("./shared/");
-        for(String filename : shared.list()){
-          peer.register(filename);
+        System.out.println("Auto-registering files in shared directory."); // Announce auto-register
+        File shared = new File("./shared/"); // Access shared directory
+        for(String filename : shared.list()){ // For each file in the directory
+          peer.register(filename); // Register it
         }
       }
     }
 
+    // Create scanner for user input on the CLI and run shell loop
+    Scanner in = new Scanner(System.in);
     while(true){
+      // Print out available commands and prompt
       System.out.println("Please enter a command: get {filename} | register {filename} | exit");
       System.out.print("dapster-peer:" + port + " >>> ");
+
+      // Read user input
       String[] command = in.nextLine().split(" ");
       String function = command[0];
+
+      // Check command name
       if(function.equals("exit")){
         Logger.EndLogging();
         System.exit(0);
@@ -56,14 +73,13 @@ public class Peer implements Serializable {
       } else if(function.equals("register")){
 
         if(command.length == 2){
-
           String filename = command[1];
           peer.register(filename);
           continue;
-
         }
 
       } else if(function.equals("test")){
+
         if(command.length == 2){
           int times = Integer.parseInt(command[1]);
           long total = 0;
@@ -79,10 +95,12 @@ public class Peer implements Serializable {
 
       }
 
+      // Announce invalid command if none of the available options were selected
       System.out.println("Invalid command!");
     }
   }
 
+  // Start of Peer class
   public static final String SHARED_DIR= "shared/";
   private String address;
   private int port;
@@ -167,7 +185,7 @@ public class Peer implements Serializable {
       // Register the file now that the peer has it
       this.register(filename);
       // Print Success message
-      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getFullAddress());
+      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getFullAddress() + ".");
 
       // Print file contents if small file
       try {
