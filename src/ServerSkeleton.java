@@ -18,6 +18,7 @@ public class ServerSkeleton {
    */
   public ServerSkeleton(Server s){
     this.server = s;
+    Logger.StartLogging();
   }
 
   /**
@@ -74,6 +75,9 @@ public class ServerSkeleton {
 
     // Dispatch call to Server
     server.register(p, filename);
+
+    // Log action
+    Logger.Log("Registering " + p.getFullAddress() + " with file " + filename +".");
   }
 
   /**
@@ -93,5 +97,8 @@ public class ServerSkeleton {
 
     // Return result of RPC over the network
     os.writeObject(peers);
+
+    // Log action
+    Logger.Log("Searching for " + filename + ": " + ((peers == null) ? 0 : peers.size()) + " peers found.");
   }
 }

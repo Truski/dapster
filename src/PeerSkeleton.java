@@ -19,6 +19,7 @@ public class PeerSkeleton {
    */
   public PeerSkeleton(Peer p){
     this.peer = p;
+    Logger.StartLogging();
   }
 
   /**
@@ -65,8 +66,11 @@ public class PeerSkeleton {
       s.close();
       fis.close();
 
+      Logger.Log("SUCCESS sending file " + filename + "."); // Log success
+
     } catch (Exception e){
       e.printStackTrace(); // An error occurred
+      Logger.Log("FAIL sending file!"); // Log failure
     }
   }
 }

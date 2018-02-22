@@ -43,6 +43,7 @@ public class Peer implements Serializable {
       String[] command = in.nextLine().split(" ");
       String function = command[0];
       if(function.equals("exit")){
+        Logger.EndLogging();
         System.exit(0);
       } else if(function.equals("get")){
 
