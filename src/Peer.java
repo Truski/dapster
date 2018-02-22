@@ -49,10 +49,7 @@ public class Peer implements Serializable {
 
         if (command.length == 2){
           String filename = command[1];
-          boolean success = peer.get(filename);
-          if(!success){
-            System.out.println("Failed to download file: " + filename);
-          }
+          peer.get(filename);
           continue;
         }
 
@@ -124,15 +121,15 @@ public class Peer implements Serializable {
    * then downloads it if there is a peer with the file.
    *
    * @param filename Name of the file to download
-   * @return Returns true if successful, false is no peer with file exists or error downloading.
    */
-  public boolean get(String filename){
+  public void get(String filename){
     // Get list of peers from the server
     ArrayList<Peer> peers = server.search(filename);
 
-    // If no peers or error, return false
+    // If no peers or error, inform user
     if(peers == null){
-      return false;
+      System.out.println("No peers with given file name \"" + filename + "\" or server error!");
+      return;
     }
 
     // Prune an instance of this peer (disallow downloading from self)
@@ -143,9 +140,10 @@ public class Peer implements Serializable {
       }
     }
 
-    // If no peers, return false
+    // If no peers, inform user
     if(peers.size() == 0){
-      return false;
+      System.out.println("No peers with given file name \"" + filename + "\"");
+      return;
     }
 
     // Create stub to Peer to download file from
@@ -176,10 +174,7 @@ public class Peer implements Serializable {
         e.printStackTrace();
       }
 
-      return true; // Successfully downloaded file
     }
-
-    return false; // Error downloading file
   }
 
   /**
