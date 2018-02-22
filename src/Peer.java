@@ -223,11 +223,21 @@ public class Peer implements Serializable {
   }
 
   /**
-   * Registers with the Indexing Server the PeerID and the name of a file it is willing to share.
+   * Registers with the Indexing Server the PeerID and the name of a file it is willing to share. If the file is not
+   * contained in the shared directory, an error will be reported.
    * @param filename The name of the file to register with
    */
   public void register(String filename){
-    System.out.println("Registering file " + filename + ".");
+    // Check if file exists
+    File file = new File(SHARED_DIR + filename);
+    if(!(file.exists() && !file.isDirectory())){
+      // If file doesn't exist, report error and return
+      System.out.println("Unable to register file \"" + filename + "\": it does not exist!");
+      return;
+    }
+
+    // If file exists, register it and announce registration
+    System.out.println("Successfully registered file \"" + filename + "\" with the indexing server.");
     server.register(this, filename);
   }
 
