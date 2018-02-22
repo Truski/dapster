@@ -32,7 +32,6 @@ public class Peer implements Serializable {
         System.out.println("Auto-registering files in shared directory.");
         File shared = new File("./shared/");
         for(String filename : shared.list()){
-          System.out.println("Registering file " + filename);
           peer.register(filename);
         }
       }
@@ -228,6 +227,7 @@ public class Peer implements Serializable {
    * @param filename The name of the file to register with
    */
   public void register(String filename){
+    System.out.println("Registering file " + filename + ".");
     server.register(this, filename);
   }
 
