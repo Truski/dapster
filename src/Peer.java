@@ -40,7 +40,7 @@ public class Peer implements Serializable {
 
     while(true){
       System.out.println("Please enter a command: get {filename} | register {filename} | exit");
-      System.out.print("dapster-peer >>> ");
+      System.out.print("dapster-peer:" + port + " >>> ");
       String[] command = in.nextLine().split(" ");
       String function = command[0];
       if(function.equals("exit")){
