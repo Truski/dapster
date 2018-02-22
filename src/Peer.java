@@ -28,7 +28,7 @@ public class Peer implements Serializable {
     new Thread(() -> peerSkeleton.listen()).start();
 
     if(args.length == 2){
-      if(args[1].equals("auto")){
+      if(args[1].equals("auto") || args[1].equals("-a")){
         System.out.println("Auto-registering files in shared directory.");
         File shared = new File("./shared/");
         for(String filename : shared.list()){
