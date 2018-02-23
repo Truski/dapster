@@ -192,10 +192,8 @@ public class Peer implements Serializable {
 
     // Download file from Peer
     if(peer.obtain(filename)){
-      // Register the file now that the peer has it
-      this.register(filename);
       // Print Success message
-      System.out.println("Successfully downloaded " + filename + " from " + peers.get(0).getFullAddress() + ".");
+      System.out.println("Successfully downloaded " + filename + " from " + selectedPeer.getFullAddress() + ".");
 
       // Print file contents if small file
       try {
@@ -214,6 +212,9 @@ public class Peer implements Serializable {
       } catch (Exception e){
         e.printStackTrace();
       }
+
+      // Register the file now that the peer has it
+      this.register(filename);
 
     }
   }
