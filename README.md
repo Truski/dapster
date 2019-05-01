@@ -4,8 +4,6 @@ Dan's Version of Napster
 # Student Information
 Daniel Wojtowicz
 
-A20349975
-
 CS 550: Advanced Operating Systems
 
 February 22nd, 2018
